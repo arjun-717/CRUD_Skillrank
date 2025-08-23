@@ -1,0 +1,16 @@
+@import "tailwindcss";
+@import 'react-toastify/dist/ReactToastify.css';
+
+
+*{
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.scroll{
+  background:transparent;
+  backdrop-filter: blur(4px);
+  padding: 30px;
+ 
+}
