@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = "https://a6f7vpvrv1.execute-api.eu-north-1.amazonaws.com/default";
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 
 export const getUsers = (page = 1, limit = 50, search = "") =>
