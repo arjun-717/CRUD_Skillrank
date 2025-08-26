@@ -15,3 +15,6 @@ export const updateUser = (id, data) =>
 
 export const deleteUser = (id) =>
   axios.delete(`${API_BASE}/users/${id}`);
+
+export const getUserById = (id) =>
+  axios.get(`${API_BASE}/users/${id}`);
