@@ -143,13 +143,13 @@ const ChatbotUI = () => {
   // Natural Language Processing
   const processMessageWithAPI = async (message) => {
     try {
-      console.log('Sending message to API:', message);
+      // console.log('Sending message to API:', message);
       
       
       const userIdMatch = message.match(/([a-fA-F0-9]{24}|[a-fA-F0-9]{12})/);
       if (userIdMatch && (message.toLowerCase().includes('find') || message.toLowerCase().includes('search') || message.toLowerCase().includes('get') || message.toLowerCase().includes('show'))) {
         const userId = userIdMatch[1];
-        console.log('Detected User ID search:', userId);
+        // console.log('Detected User ID search:', userId);
         
        
         try {
@@ -179,7 +179,7 @@ const ChatbotUI = () => {
           }
 
           const result = await response.json();
-          console.log('Direct ID Search Response:', result);
+          // console.log('Direct ID Search Response:', result);
 
           let displayMessage = `**Perfect Match Found!**\n\n——— User ———\n`;
           displayMessage += `ID: ${result._id}\n`;
@@ -297,7 +297,7 @@ const ChatbotUI = () => {
       }
 
       const result = await response.json();
-      console.log('API Response:', result);
+      // console.log('API Response:', result);
       
       let parsedResult;
       if (typeof result.body === 'string') {
@@ -504,11 +504,11 @@ const ChatbotUI = () => {
 
   const completeUserCreation = async (userData) => {
     try {
-      console.log('Creating user with data:', userData);
+      // console.log('Creating user with data:', userData);
       
       const messageStr = `Create user with name: ${userData.name}, email: ${userData.email}, phone: ${userData.phone}, age: ${userData.age}, address: ${userData.address}`;
       
-      console.log('Sending API request with message:', messageStr);
+      // console.log('Sending API request with message:', messageStr);
 
       const requestBody = {
         message: messageStr
@@ -638,10 +638,10 @@ const ChatbotUI = () => {
 
       // API to update user
       try {
-        console.log('Updating user with data:', newData);
+        // console.log('Updating user with data:', newData);
         
         const messageStr = `Update user id: ${newData.user_id} with ${newData.field}: ${newData.new_value}`;
-        console.log('Sending update request:', messageStr);
+        // console.log('Sending update request:', messageStr);
 
         const response = await fetch(API_ENDPOINT, {
           method: 'POST',
@@ -660,7 +660,7 @@ const ChatbotUI = () => {
 
         const result = await response.json();
         let parsedResult = typeof result.body === 'string' ? JSON.parse(result.body) : result;
-        console.log('Update API Response:', parsedResult);
+        // console.log('Update API Response:', parsedResult);
         
         return {
           message: `UPDATE SUCCESSFUL!\n\n${parsedResult.message || `Great! I've updated the ${newData.field} for user ${newData.user_id}.`}\n\n**Details:**\nUser ID: ${newData.user_id}\nField: ${newData.field}\nNew Value: ${newData.new_value}\n\nAll done! What shall we do next?`,
@@ -730,10 +730,10 @@ const ChatbotUI = () => {
     if (conversationState.step === 1) {
       if (message === 'yes') {
         try {
-          console.log('Deleting user with ID:', conversationState.data.user_id);
+          // console.log('Deleting user with ID:', conversationState.data.user_id);
           
           const messageStr = `Delete user id: ${conversationState.data.user_id}`;
-          console.log('Sending delete request:', messageStr);
+          // console.log('Sending delete request:', messageStr);
 
           const response = await fetch(API_ENDPOINT, {
             method: 'POST',
@@ -753,7 +753,7 @@ const ChatbotUI = () => {
 
           const result = await response.json();
           let parsedResult = typeof result.body === 'string' ? JSON.parse(result.body) : result;
-          console.log('Delete API Response:', parsedResult);
+          // console.log('Delete API Response:', parsedResult);
           
           return {
             message: `**User Deleted Successfully**\n\n${parsedResult.message || `The user with ID ${conversationState.data.user_id} has been removed.`}\n\n**Deleted User ID:** ${conversationState.data.user_id}\n\nThe operation is complete.\n\nWhat would you like to do next? I'm here to help with anything you need!`,
@@ -857,7 +857,7 @@ const ChatbotUI = () => {
         searchType = `looking for name: ${message}`;
       }
 
-      console.log('Sending search request to:', apiUrl, 'with method:', method);
+      // console.log('Sending search request to:', apiUrl, 'with method:', method);
 
       let response;
       if (method === 'POST') {
@@ -900,7 +900,7 @@ const ChatbotUI = () => {
       }
 
       const result = await response.json();
-      console.log('Search API Response:', result);
+      // console.log('Search API Response:', result);
 
       let displayMessage = '';
 
