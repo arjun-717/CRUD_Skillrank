@@ -1,11 +1,5 @@
 
-
-
-// const Icon = ({ name, className = "w-5 h-5" }) => (
-//   <i className={`fas fa-${name} ${className}`}></i>
-// );
-
-// export default function QuickActions ({ conversationState, isLoading, onActionClick }) {
+// export default function QuickActions({ conversationState, isLoading, onActionClick }) {
 //   if (conversationState.mode !== 'idle') return null;
 
 //   const actions = [
@@ -18,25 +12,32 @@
 //   return (
 //     <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
 //       <div className="mb-3 text-center">
-//         <h3 className="text-lg font-semibold text-gray-800 mb-1">🚀 Quick Actions</h3>
-//         <p className="text-sm text-gray-600">Choose what you'd like to do today!</p>
+//    <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">🚀 Quick Actions</h3>
+// <p className="text-xs sm:text-sm text-gray-600">Choose what you'd like to do today!</p>
+
 //       </div>
-//       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+
+//       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
 //         {actions.map((action) => (
 //           <button
 //             key={action.key}
 //             onClick={() => onActionClick(action.key)}
-//             className={`group flex flex-col items-center justify-center space-y-2 px-4 py-3 text-sm bg-gradient-to-r ${action.color} text-white rounded-xl hover:${action.hoverColor} transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
+//             className={`
+//               flex flex-row items-center justify-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm 
+//               bg-gradient-to-r ${action.color} text-white rounded-lg sm:rounded-xl 
+//               hover:${action.hoverColor} transition-all duration-300 transform hover:scale-105 hover:shadow-lg 
+//               disabled:opacity-50 disabled:cursor-not-allowed
+//             `}
 //             disabled={isLoading}
 //           >
-//             <Icon name={action.icon} className="w-5 h-5 group-hover:animate-bounce" />
+//             <i className={`fas fa-${action.icon} text-base sm:text-lg`} />
 //             <span className="font-medium">{action.label}</span>
 //           </button>
 //         ))}
 //       </div>
 //     </div>
 //   );
-// };
+// }
 
 export default function QuickActions({ conversationState, isLoading, onActionClick }) {
   if (conversationState.mode !== 'idle') return null;
@@ -51,9 +52,8 @@ export default function QuickActions({ conversationState, isLoading, onActionCli
   return (
     <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
       <div className="mb-3 text-center">
-   <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">🚀 Quick Actions</h3>
-<p className="text-xs sm:text-sm text-gray-600">Choose what you'd like to do today!</p>
-
+        <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">🚀 Quick Actions</h3>
+        <p className="text-xs sm:text-sm text-gray-600">Choose what you'd like to do today!</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
