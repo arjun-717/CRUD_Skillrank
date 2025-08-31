@@ -23,6 +23,10 @@ export default function HomePage() {
           <i className="fa-solid fa-folder-open"></i>
           View Records
         </Link>
+         <Link to="/selenium" className="w-full md:w-auto px-5 py-3 rounded-2xl bg-white text-indigo-600 text-base md:text-lg font-semibold shadow-md border border-indigo-300 hover:bg-indigo-50 hover:scale-105 transition duration-300 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-link"></i>
+          Amazon Scraper
+        </Link>
       </div>
 
     </div>
