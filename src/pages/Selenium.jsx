@@ -58,15 +58,15 @@ function SeleniumPage() {
       <div className="container mx-auto px-4 py-6 sm:py-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
-            <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-xl">
-              <ShoppingCart className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+          <div className="flex sm:flex-row items-center justify-center space-x-2 sm:space-y-0 sm:space-x-4 mb-6">
+            <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl sm:rounded-2xl shadow-xl">
+              <ShoppingCart className="w-5 h-5 sm:w-12 sm:h-12 text-white" />
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent tracking-tight">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent tracking-tight">
               Amazon Scraper
             </h1>
           </div>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
+          <p className="text-xs sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
             Powerful AI-driven tool to scrape and analyze Amazon products with real-time data extraction and intelligent insights
           </p>
           

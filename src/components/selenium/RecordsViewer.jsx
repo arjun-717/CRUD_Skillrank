@@ -106,13 +106,14 @@ const RecordsViewer = ({ refreshTrigger }) => {
             </div>
 
             {/* Mobile-Optimized Pagination */}
-        <div className="flex flex-row items-center justify-center space-x-3 sm:space-x-4 lg:space-x-6 pt-6 sm:pt-8 flex-wrap">
+        <div className="flex flex-row items-center justify-center gap-4 pt-6 sm:pt-8">
   <button
     onClick={() => setSkip(Math.max(0, skip - limit))}
     disabled={skip === 0}
-    className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none min-w-[100px] text-sm sm:text-base"
+    
+    className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none min-w-[50px] flex items-center justify-center"
   >
-    Previous
+    <i className="fas fa-chevron-left"></i>
   </button>
 
   <div className="px-3 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-bold shadow-lg text-sm sm:text-base min-w-[80px] text-center">
@@ -122,9 +123,9 @@ const RecordsViewer = ({ refreshTrigger }) => {
   <button
     onClick={() => setSkip(skip + limit)}
     disabled={totalCount < limit}
-    className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none min-w-[100px] text-sm sm:text-base"
+className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none min-w-[50px] flex items-center justify-center"
   >
-    Next
+    <i className="fas fa-chevron-right"></i>
   </button>
 </div>
 
