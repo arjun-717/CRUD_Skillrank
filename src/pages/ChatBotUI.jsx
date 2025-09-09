@@ -436,75 +436,123 @@ const ChatbotUI = () => {
     };
   };
 
-  const handleCreateMode = async (message) => {
-    const currentStep = conversationState.step;
-    const currentField = createUserFlow[currentStep];
-    const newData = { ...conversationState.data };
+const handleCreateMode = async (message) => {
+  const currentStep = conversationState.step;
+  const currentField = createUserFlow[currentStep];
+  const newData = { ...conversationState.data };
 
-    if (message === 'back' || message === 'cancel') {
-      return {
-        message: "User creation cancelled. No worries – I'll be here whenever you're ready to create a new user!\n\nWhat else can I help you with today?",
-        action: 'cancel',
-        newState: { 
-          mode: 'idle', 
-          step: 0, 
-          data: {}, 
-          operation: null,
-          useStepByStep: false,
-          pendingConfirmation: null,
-          triggeredByQuickAction: false
-        }
-      };
-    }
-
-    if (!message || message.trim() === '' || message === 'skip') {
-      return {
-        message: `Oops! This field is required – I can't leave it blank!\n\nI need the ${currentField.field} to complete this user. It's an important part of the process!\n\n${currentField.question}`,
-        action: 'create',
-        newState: null
-      };
-    }
-
-    // Validate email 
-    if (currentField.field === 'email' && !isValidEmail(message)) {
-      return {
-        message: "That doesn't seem like a valid email address.\n\nPlease enter something like 'example@email.com' with the '@' and a domain.\n\nYou got this!",
-        action: 'create',
-        newState: null
-      };
-    }
-
-    // Validate age
-    if (currentField.field === 'age') {
-      const age = parseInt(message);
-      if (isNaN(age) || age < 1 || age > 120) {
-        return {
-          message: "Hmm, that age doesn't look quite right!\n\nPlease enter a number between 1 and 120. What's their actual age?",
-          action: 'create',
-          newState: null
-        };
-      }
-      newData[currentField.field] = age;
-    } else {
-      newData[currentField.field] = message;
-    }
-
-    // Move to next step
-    const nextStep = currentStep + 1;
-    if (nextStep >= createUserFlow.length) {
-      return await completeUserCreation(newData);
-    }
-
+  if (message === 'back' || message === 'cancel') {
     return {
-      message: createUserFlow[nextStep].question,
-      action: 'create',
-      newState: { ...conversationState, step: nextStep, data: newData }
+      message:
+        "User creation cancelled. No worries – I'll be here whenever you're ready to create a new user!\n\nWhat else can I help you with today?",
+      action: 'cancel',
+      newState: {
+        mode: 'idle',
+        step: 0,
+        data: {},
+        operation: null,
+        useStepByStep: false,
+        pendingConfirmation: null,
+        triggeredByQuickAction: false,
+      },
     };
+  }
+
+  if (!message || message.trim() === '' || message === 'skip') {
+    return {
+      message: `Oops! This field is required – I can't leave it blank!\n\nI need the ${currentField.field} to complete this user. It's an important part of the process!\n\n${currentField.question}`,
+      action: 'create',
+      newState: null,
+    };
+  }
+  // validate name
+  if (currentField.field === 'name') {
+  const trimmedName = message.trim();
+  if (!/^[a-zA-Z\s]+$/.test(trimmedName)) {
+    return {
+      message: "Name can contain only alphabets and spaces. Please remove numbers and special characters.",
+      action: 'create',
+      newState: null,
+    };
+  }
+  newData.name = trimmedName;
+}
+
+  // Validate email 
+  if (currentField.field === 'email' && !isValidEmail(message)) {
+    return {
+      message:
+        "That doesn't seem like a valid email address.\n\nPlease enter something like 'example@email.com' with the '@' and a domain.\n\nYou got this!",
+      action: 'create',
+      newState: null,
+    };
+  }
+
+  // Validate age
+  if (currentField.field === 'age') {
+    const age = parseInt(message);
+    if (isNaN(age) || age < 1 || age > 120) {
+      return {
+        message:
+          "Hmm, that age doesn't look quite right!\n\nPlease enter a number between 1 and 120. What's their actual age?",
+        action: 'create',
+        newState: null,
+      };
+    }
+    newData[currentField.field] = age;
+  }
+
+  // Validate phone
+  else if (currentField.field === 'phone') {
+    const phoneDigits = message.replace(/\D/g, ''); // Remove non digits
+    if (!/^\d{10}$/.test(phoneDigits)) {
+      return {
+        message:
+          "Please enter a valid 10-digit phone number (digits only, no spaces or special characters).",
+        action: 'create',
+        newState: null,
+      };
+    }
+    // Prepend +91 prefix as required
+    newData.phone = '+91 ' + phoneDigits;
+  }
+
+  // Validate address
+  else if (currentField.field === 'address') {
+    const trimmedAddress = message.trim();
+    // Must contain at least one alphabet character
+    if (!/[a-zA-Z]/.test(trimmedAddress)) {
+      return {
+        message:
+          "Address must contain at least one alphabet character and cannot be numbers only.",
+        action: 'create',
+        newState: null,
+      };
+    }
+    newData.address = trimmedAddress;
+  }
+
+  else {
+    newData[currentField.field] = message;
+  }
+
+  // Move to next step
+  const nextStep = currentStep + 1;
+  if (nextStep >= createUserFlow.length) {
+    return await completeUserCreation(newData);
+  }
+
+  return {
+    message: createUserFlow[nextStep].question,
+    action: 'create',
+    newState: { ...conversationState, step: nextStep, data: newData },
   };
+};
+
 
   const completeUserCreation = async (userData) => {
     try {
-      // console.log('Creating user with data:', userData);
+      // console.log('Creating user with data:', userData); 
       
       const messageStr = `Create user with name: ${userData.name}, email: ${userData.email}, phone: ${userData.phone}, age: ${userData.age}, address: ${userData.address}`;
       
@@ -529,7 +577,7 @@ const ChatbotUI = () => {
       let parsedResult = typeof result.body === 'string' ? JSON.parse(result.body) : result;
       
       return {
-        message: `User Created Successfully!\n\n${parsedResult.message || 'Welcome to our digital family, ' + userData.name + '!'}\n\nUser Details:\nName: ${userData.name}\nEmail: ${userData.email}\nPhone: ${userData.phone}\nAge: ${userData.age}\nAddress: ${userData.address}\n\nThis user is now part of our community! What would you like to do next?`,
+        message: `${parsedResult.message || 'Welcome to our digital family, ' + userData.name + '!'}\n\nThis user is now part of our community! What would you like to do next?`,
         action: 'create',
         newState: { 
           mode: 'idle', 

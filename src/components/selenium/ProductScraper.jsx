@@ -12,6 +12,12 @@ const ProductScraper = ({ onScrapeComplete }) => {
   const handleScrape = async (e) => {
     e.preventDefault();
     
+    const validName = /^(?=(.*[a-zA-Z]){2,})[a-zA-Z0-9\s-]+$/;
+  if (!validName.test(query.trim())) {
+    toast.error('Enter a valid product name');
+    return;
+  }
+
     if (!query.trim()) {
       toast.error('Please enter a product name to search');
       return;

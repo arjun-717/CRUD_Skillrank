@@ -4,6 +4,7 @@ import { getUsers, deleteUser, updateUser, getUserById } from "../services/api";
 import { Link } from "react-router-dom";
 import PaginationScroll from "../components/PaginationScroll";
 import { toast } from "react-toastify";
+import DeleteConfirmToast from "../components/chatbot/DeleteConfirmToast";
 import { FaTrash, FaTimes, FaSearch, FaUser } from "react-icons/fa";
 
 export default function UserPage() {
@@ -68,7 +69,7 @@ export default function UserPage() {
     try {
       const res = await getUserById(searchById.trim());
       const user = res.data;
-      
+
       // Show the found user in popup
       setSelectedUser(user);
       setEditForm({
@@ -81,7 +82,7 @@ export default function UserPage() {
       setHasChanges(false);
       setShowPopup(true);
       setDel(true);
-      
+
       toast.success("User found successfully!");
     } catch (error) {
       console.error("Error fetching user by ID:", error);
@@ -92,84 +93,77 @@ export default function UserPage() {
 
   const validateForm = () => {
     const errors = {};
+
+    // Normalize to lowercase for case-insensitive checks
+    const normalized = {
+      ...editForm,
+      name: editForm.name?.toLowerCase() || '',
+      email: editForm.email?.toLowerCase() || '',
+      address: editForm.address?.toLowerCase() || '',
+    };
+
     const requiredFields = ['name', 'email', 'address', 'phone', 'age'];
-    
+
     requiredFields.forEach(field => {
-      if (!editForm[field] || editForm[field].toString().trim() === '') {
+      if (!normalized[field] || normalized[field].toString().trim() === '') {
         errors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
       }
     });
 
-    // Email validation
-    if (editForm.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editForm.email)) {
+    // Email validation on normalized email
+    if (normalized.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized.email)) {
       errors.email = 'Please enter a valid email address';
     }
 
-    // Phone validation (basic)
-    if (editForm.phone && !/^\d{10,15}$/.test(editForm.phone.replace(/\s+/g, ''))) {
-      errors.phone = 'Please enter a valid phone number (10-15 digits)';
+    // Phone validation
+    if (normalized.phone) {
+      const phone = normalized.phone.trim();
+      if (!/^\+91\s\d{10}$/.test(phone)) {
+        errors.phone = 'Enter valid phone number (+91 prefix important)';
+      }
     }
 
     // Age validation
-    if (editForm.age && (isNaN(editForm.age) || editForm.age < 1 || editForm.age > 120)) {
-      errors.age = 'Please enter a valid age (1-120)';
+    if (normalized.age && (isNaN(normalized.age) || normalized.age < 1 || normalized.age > 120)) {
+      errors.age = 'Please enter a valid age';
     }
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
+
   const handleDelete = (id) => {
-    if (del == true) {
+    if (del === true) {
       setDel(false);
+
       toast(
         ({ closeToast }) => (
-          <div className="flex flex-col items-center p-3">
-            <div className="flex items-center gap-2 text-red-600 font-bold text-lg mb-2">
-              <FaTrash className="text-xl" />
-              <span>Confirm Deletion</span>
-            </div>
+          <DeleteConfirmToast
+            onConfirm={async () => {
+              try {
+                await deleteUser(id);
+                setUsers((prev) => prev.filter((user) => user._id !== id));
+                toast.success("User deleted successfully!", { position: "top-right" });
 
-            <p className="text-gray-700 text-sm mb-4 text-center">
-              Are you sure you want to delete this user?
-              <span className="font-semibold text-red-500"> This action cannot be undone.</span>
-            </p>
-
-            <div className="flex gap-4">
-              <button
-                onClick={async () => {
-                  try {
-                    await deleteUser(id);
-                    setUsers((prev) => prev.filter((user) => user._id !== id));
-                    toast.success("User deleted successfully!", { position: "top-right" });
-
-                    closeToast();
-                    setShowPopup(false);
-                    fetchUsers();
-                  } catch (error) {
-                    toast.error("Failed to delete user!", { position: "top-right" });
-                  }
-                }}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-md transition"
-              >
-                Yes, Delete
-              </button>
-              <button
-                onClick={() => {
-                  closeToast();
-                  setDel(true);
-                }}
-                className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-lg shadow-md transition flex items-center gap-1"
-              >
-                <FaTimes /> Cancel
-              </button>
-            </div>
-          </div>
+                closeToast();
+                setShowPopup(false);
+                fetchUsers();
+              } catch (error) {
+                toast.error("Failed to delete user!", { position: "top-right" });
+              }
+            }}
+            onCancel={() => {
+              closeToast();
+              setDel(true);
+            }}
+          />
         ),
         {
           autoClose: false,
           closeOnClick: false,
           draggable: false,
+          closeButton: false,
           position: "top-center",
           className: "rounded-lg shadow-lg bg-white border border-gray-200",
           style: { minWidth: "300px" },
@@ -214,6 +208,13 @@ export default function UserPage() {
       }
       return (selectedUser[key] || '') !== (editForm[key] || '');
     });
+
+
+
+
+
+
+
     setHasChanges(hasFormChanges || (selectedUser[field] || '') !== value);
   };
 
@@ -227,14 +228,24 @@ export default function UserPage() {
     }
 
     setIsUpdating(true);
+
     try {
-      await updateUser(selectedUser._id, editForm);
+      // Create updated data with lowercased name, email, address
+      const updatedData = {
+        ...editForm,
+        name: editForm.name?.toLowerCase() || '',
+        email: editForm.email?.toLowerCase() || '',
+        address: editForm.address?.toLowerCase() || '',
+      };
+
+      await updateUser(selectedUser._id, updatedData);
+
       setUsers(users.map(user =>
         user._id === selectedUser._id
-          ? { ...user, ...editForm }
+          ? { ...user, ...updatedData }
           : user
       ));
-      setSelectedUser({ ...selectedUser, ...editForm });
+      setSelectedUser({ ...selectedUser, ...updatedData });
       setHasChanges(false);
       setFormErrors({});
       console.log("User updated");
@@ -355,21 +366,26 @@ export default function UserPage() {
                 key={user._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-transform hover:scale-102 duration-200"
+                onClick={() => handleShowUser(user)}
+                className="bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-transform hover:scale-102 duration-200 cursor-pointer"
               >
                 <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-800">{user.name || 'No Name'}</h3>
-                    <p className="text-sm text-gray-500">Click to view details</p>
+                  <div className="flex items-center space-x-4">
+                    {/* User icon with rounded circle */}
+                    <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-lg">
+                      <FaUser />
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800">{user.name || 'No Name'}</h3>
+                      <p className="text-sm text-gray-500">Click to view details</p>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => handleShowUser(user)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition"
-                  >
-                    Show
-                  </button>
+
+                  {/* Show button removed */}
                 </div>
               </motion.div>
+
             ))}
           </div>
         )}
@@ -399,16 +415,37 @@ export default function UserPage() {
                 className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl font-bold text-gray-800">User Details</h2>
-                  <button
-                    onClick={() => setShowPopup(false)}
-                    className="text-gray-500 hover:text-gray-700 text-xl"
-                  >
-                    <i className="fa-solid fa-times"></i>
-                  </button>
-                </div>
+             <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
+  <div className="flex items-center space-x-3 min-w-0">
+    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-lg md:text-xl flex-shrink-0">
+      <FaUser />
+    </div>
+    <h2 className="text-xl md:text-2xl font-bold text-gray-800 truncate min-w-0">
+      User Details
+    </h2>
+  </div>
+  <button
+    onClick={() => setShowPopup(false)}
+    className="text-gray-500 hover:text-gray-700 text-2xl md:text-xl flex-shrink-0"
+    aria-label="Close"
+  >
+    <i className="fa-solid fa-times"></i>
+  </button>
+</div>
 
+                <p className="text-xs text-gray-600 mb-4 break-all">
+  <span className="font-semibold">User ID: </span>
+  <button
+    onClick={() => {
+      navigator.clipboard.writeText(selectedUser._id);
+      toast.success("User ID copied to clipboard!");
+    }}
+    className="underline text-blue-600 hover:text-blue-800 focus:outline-none"
+    title="Click to copy User ID"
+  >
+    {selectedUser._id}
+  </button>
+</p>
                 <form onSubmit={handleUpdate} className="space-y-4 mb-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-600 mb-1">

@@ -12,20 +12,28 @@ function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // List chatbot routes where FloatingChatbot should be hidden
+  const chatbotRoutes = ['/chatbot','/selenium'];
+
+  // Check if current route requires hiding FloatingChatbot
+  const hideChatbot = chatbotRoutes.some(path => location.pathname.startsWith(path));
+
   return (
     <div className="mx-auto relative">
       <Routes>
-        <Route path="/" element={<HomePage/>} />
-        <Route path="/adduser" element={<AddUser/>} />
-        <Route path="/users" element={<UserPage/>} />
-        <Route path="/chatbot" element={<ChatbotUI/>} />
-        <Route path="/selenium" element={<SeleniumPage/>}/>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/adduser" element={<AddUser />} />
+        <Route path="/users" element={<UserPage />} />
+        <Route path="/chatbot" element={<ChatbotUI />} />
+        <Route path="/selenium" element={<SeleniumPage />} />
       </Routes>
-      
-      <FloatingChatbot navigate={navigate} location={location} />
+
+      {/* Conditionally render FloatingChatbot */}
+      {!hideChatbot && <FloatingChatbot navigate={navigate} location={location} />}
     </div>
   );
 }
+
 
 export default function App() {
   return (
