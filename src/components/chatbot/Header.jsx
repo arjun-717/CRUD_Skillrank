@@ -69,10 +69,10 @@ const getMoodEmoji = () => {
   {/* Title + Subtitle */}
   <div className="text-center md:text-left">
     <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
-      Smart CrudMate
+      ContactBuddy
     </h1>
     <p className="text-xs md:text-sm text-gray-600">
-      Your smart assistant for effortless CRUD operations ✨
+      Manage your contacts effortlessly with AI ✨
     </p>
   </div>
 </div>

@@ -1,16 +1,134 @@
 @import "tailwindcss";
 @import 'react-toastify/dist/ReactToastify.css';
 
-
-*{
+* {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-style: normal;
 }
 
-.scroll{
-  background:transparent;
+.scroll {
+  background: transparent;
   backdrop-filter: blur(4px);
   padding: 30px;
- 
+}
+.contact-card {
+  min-width: 0; /* ensures truncate works */
+  flex: 1; /* allows equal width distribution in grid */
+}
+
+/* Improved Login Background */
+.login-background {
+  background: linear-gradient(135deg, 
+    #74b9ff 0%, 
+    #0984e3 25%, 
+    #6c5ce7 50%, 
+    #a29bfe 75%, 
+    #fd79a8 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease infinite;
+  position: relative;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+
+/* Enhanced Login Card */
+.login-card {
+  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1), 
+              0 0 0 1px rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 35px 60px rgba(0, 0, 0, 0.15),
+              0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+
+.phone-icon {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+}
+
+.phone-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.phone-icon:hover::before {
+  left: 100%;
+}
+
+
+/* Input Field Enhancements */
+.input-field {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 2px solid rgba(255, 255, 255, 0.6) !important;
+  color: #1f2937 !important;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.input-field:focus {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: #3b82f6 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+}
+
+.input-field::placeholder {
+  color: #6b7280 !important;
+  font-weight: 400;
+}
+
+/* Form Labels */
+.form-group label {
+  color: #374151 !important;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* Submit Button Enhancements */
+.submit-btn {
+  position: relative;
+  overflow: hidden;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.submit-btn:hover::before {
+  left: 100%;
 }
